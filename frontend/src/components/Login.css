@@ -1,0 +1,39 @@
+
+.app {
+    background-color: #f3f0f0; 
+    /* background-color: whitesmoke; */
+    /* height:100vh */
+  }
+  
+  
+  .app_header-image{
+    object-fit: contain;
+      /* width: auto */
+  }
+  
+  .sign-up-input{
+    margin: 50px;
+  }
+  
+  .app__signup{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .Sign_up_Here{
+    cursor: pointer;
+    
+  }
+  
+  .Sign_up_Here:hover{
+    cursor: pointer;
+    color:rgb(85, 190, 90);
+    
+  }
+
+  .app__post{
+    padding: 2rem;
+  }
+  
+  
+  
