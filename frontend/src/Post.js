@@ -74,7 +74,7 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
                     imageUrl={`${curdata.imageUrl}`}
                     comment={curdata.comment}
                   /> */}
-            <div className="post">
+            <div className="post" >
               {/* header  --> avatar + username */}
               <div className="post__header">
                 <Avatar
@@ -115,14 +115,14 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
                 })}
               {/* {setuniqueComment(curdata.id)} */}
               {/* <form action="" onSubmit={onSubmitComments(curdata.id)}> */}
-              <div>
+              <div style={{ margin: "1rem" }}>
                 <TextField
                   className="sign-up-input"
                   id="outlined-basic"
-                  label="Comments"
+                  label="Comments..."
                   variant="outlined"
                   value={comments}
-                  style={{ marginBottom: "1rem" }}
+                  
                   onChange={(e) => setcommets(e.target.value)}
                 />
                 <Button
@@ -133,20 +133,6 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
                 </Button>
               </div>
 
-              {/* </form> */}
-              {/* <Comments /> */}
-              {/* <div>
-        <TextField
-          className="sign-up-input"
-          id="outlined-basic"
-          label="User-name"
-          variant="outlined"
-          value={comments}
-          style={{ marginBottom: "1rem" }}
-          onChange={(e) => setcommets(e.target.value)}
-        />
-        <Button onClick={onPostComment}>Post</Button>
-      </div> */}
             </div>
           </>
         ))}
@@ -156,6 +142,20 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
 };
 
 // =========================================================
+{/* </form> */}
+{/* <Comments /> */}
+{/* <div>
+<TextField
+className="sign-up-input"
+id="outlined-basic"
+label="User-name"
+variant="outlined"
+value={comments}
+style={{ marginBottom: "1rem" }}
+onChange={(e) => setcommets(e.target.value)}
+/>
+<Button onClick={onPostComment}>Post</Button>
+</div> */}
 // =========================================================
 // =========================================================
 
@@ -166,28 +166,28 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
 // import { Comments } from "./Comments";
 
 // export const Post = ({ username, caption, imageUrl, id }) => {
-
-//   // const onPostComment = async (e) => {
-//   //   e.preventDefault();
-//   //   // setemptyError(true);
-//   //   // console.log("SDFsdf");
-
-//   //   try {
-//   //     const result = await axios.post(
-//   //       "http://localhost:5000/comment",
-//   //       comments
-//   //     );
-
-//   //     console.log(result.data);
-
-//   //     // if (result.data.data) {
-//   //     //   // setuserLoggedIN(true);
-//   //     //   // clearData();
-//   //     //   console.log();
-//   //     //   // localStorage.setItem("user", 1);
-//   //     //   // return result;
-//   //     // } else {
-//   //     //   // toast.warn(result.data.message);
+  
+  //   // const onPostComment = async (e) => {
+    //   //   e.preventDefault();
+    //   //   // setemptyError(true);
+    //   //   // console.log("SDFsdf");
+    
+    //   //   try {
+      //   //     const result = await axios.post(
+        //   //       "http://localhost:5000/comment",
+        //   //       comments
+        //   //     );
+        
+        //   //     console.log(result.data);
+        
+        //   //     // if (result.data.data) {
+          //   //     //   // setuserLoggedIN(true);
+          //   //     //   // clearData();
+          //   //     //   console.log();
+          //   //     //   // localStorage.setItem("user", 1);
+          //   //     //   // return result;
+          //   //     // } else {
+            //   //     //   // toast.warn(result.data.message);
 //   //     //   return;
 //   //     // }
 

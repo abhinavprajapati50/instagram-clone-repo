@@ -58,7 +58,7 @@ export const Login = () => {
 
   const [open, setOpen] = useState(false);
 
-  console.log(addPost);
+
 
   const [name, setname] = useState("");
   const [caption, setcaption] = useState("");
@@ -122,13 +122,14 @@ export const Login = () => {
         // localStorage.setItem("users", result.data);
         seterrMsg(result.data.message);
         // CloseSignup()
-        handleClose();
         // return result;
       } else {
         seterrMsg(result.data.message);
         // toast.warn(result.data.message);
         return;
       }
+      handleClose();
+      handlesetSignInModleopenClose();
 
       console.log("---------result: ", result.data);
     } catch (error) {
@@ -162,12 +163,7 @@ export const Login = () => {
         formData
       );
 
-      // const result = await axios.post("http://localhost:5000/addpost", {
-      //   username: username,
-      //   password: password,
-      //   username: username,
-      // });
-
+     
       console.log("}}}}}}}}}}}}}}}}}}]", result.data);
 
       if (result.data.data) {
@@ -177,14 +173,15 @@ export const Login = () => {
         // localStorage.setItem("user", 1);
         setpostMsg(result.data.message);
         // CloseSignup()
-        handleCloseAddPost();
         // return result;
       } else {
         setpostMsg(result.data.message);
         // toast.warn(result.data.message);
         return;
       }
+      handleClose();
 
+      handleCloseAddPost();
       console.log("---------result: ", result.data);
     } catch (error) {
       console.log("error!!", error.message);
@@ -192,6 +189,7 @@ export const Login = () => {
   };
   const onSubmitSignInHandler = async (e) => {
     e.preventDefault();
+    debugger
     setemptyError(true);
     console.log("======================");
 
@@ -219,6 +217,7 @@ export const Login = () => {
         // toast.warn(result.data.message);
         return;
       }
+      handlesetSignInModleopenClose();
 
       console.log("---------result: ", result.data.data);
     } catch (error) {
@@ -236,8 +235,6 @@ export const Login = () => {
     setpassword("");
     setusername("");
   };
-  //  post.map(cur => setuniqueComment(cur.id))
-  // console.log(uniqueComment);
 
   console.log("-------------LoggedUser", LoggedUser);
   useEffect(async () => {
@@ -246,19 +243,14 @@ export const Login = () => {
       email: email,
       password: password,
     });
-    // return result;
+  
     const allPost = await axios.get("http://localhost:5000/addpost");
     const { data, status, message } = allPost.data;
-    // --------------add comment api
-    // console.log("----allPost", allPost.data.data);
+   
     setpost(data);
     console.log("allPost ==>> ", data);
 
-    // const postComments = await data.map((postId) => {
-    //   return axios.get(
-    //     `http://localhost:5000/get-comment?Post_id=${postId.id}`
-    //   );
-    // });
+  ;
 
     const postComments = await Promise.all(
       data.map((postId) => {
@@ -270,49 +262,20 @@ export const Login = () => {
       })
     );
 
-    // console.log("postComments ==>> ", postComments);
-
-    // const IDs = await Promise.all(
-    //   allPost.data.data.map(async (postId) => {
-    //     return await axios.get(
-    //       `http://localhost:5000/get-comment?Post_id=${postId.id}`
-    //     );
-    //   })
-    // );
-
-    // console.log("result", IDs);
-    // const postD = IDs.map((postId) => {
-    // });
+    
     const postID = postComments.map((postId) => {
       console.log("postId ==>> ", postId.data.data);
       return postId.data.data;
-      // const allComments = await axios.get(
-      //   `http://localhost:5000/get-comment?Post_id=${postId.Post_id}`
-      // );
+     
     });
     setAllcommets(postID);
 
-    // const allComments = await axios.get(`http://localhost:5000/get-comment?Post_id=${uniqueComment}`);
-    // const allComments = post.map(
-    //   async (cur) =>
-    //     await axios.get(`http://localhost:5000/get-comment?Post_id=49`)
-    // );
-    // Promise.all(allComments);
-    // const allComments = await axios.get(
-    //   `http://localhost:5000/get-comment?Post_id=49`
-    // );
-    // const allComments = post.map(
-    //   async (cur) =>
-    //     await axios.get(`http://localhost:5000/get-comment?Post_id=${cur.id}`)
-    // );
-    // )
-
-    // console.log("get-commentget-commentget-comment", allComments.data.data);
+  
   }, [userLoggedIN]);
 
-  useEffect(() => {
-    axios.get(`http://localhost:5000/get-comment`);
-  }, [Allcomments]);
+  // useEffect(() => {
+  //   axios.get(`http://localhost:5000/get-comment`);
+  // }, [Allcomments]);
 
   return (
     <div className="app">
@@ -320,25 +283,24 @@ export const Login = () => {
         {userLoggedIN ? (
           <>
             <div className="app_header">
-              <img className="app_header-image" src="./instaname.png" alt="" />
+              <h2>𝖎𝖓𝖘𝖙𝖆𝖌𝖗𝖆𝖒</h2>
+              {/* <img className="app_header-image" src="./instaname.png" alt="" /> */}
               {/* <h1>Login Here. . .</h1> */}
               <div className="app__button">
-
-              
-              <Button
-                type="button"
-                className="Sign_up_Here"
-                onClick={logoutHandler}
-              >
-                Logout
-              </Button>
-              <Button
-                type="button"
-                className="Sign_up_Here"
-                onClick={handleAddPost}
-              >
-                Add Post
-              </Button>
+                <Button
+                  type="button"
+                  className="Sign_up_Here"
+                  onClick={logoutHandler}
+                >
+                  Logout
+                </Button>
+                <Button
+                  type="button"
+                  className="Sign_up_Here"
+                  onClick={handleAddPost}
+                >
+                  Add Post
+                </Button>
               </div>
             </div>
             <Post
@@ -350,20 +312,30 @@ export const Login = () => {
             />
           </>
         ) : (
-          <div>
-            <Button type="button" className="Sign_up_Here" onClick={handleOpen}>
-              Sign-up
-            </Button>
-            <Button
-              type="button"
-              className="Sign_up_Here"
-              onClick={handlesetSignInModleopenOpen}
-            >
-              Sign-In
-            </Button>
-          </div>
+          <>
+            <div >
+              <Button
+                type="button"
+                className="Sign_up_Here"
+                onClick={handleOpen}
+              >
+                Sign-up
+              </Button>
+              <Button
+                type="button"
+                className="Sign_up_Here"
+                onClick={handlesetSignInModleopenOpen}
+              >
+                Sign-In
+              </Button>
+              </div>
+              <div>
+              <img src="./insta.gif" alt="" style={{width: "100%", height: "100%",maxWidth: "100%"}} />
+              </div>
+          </>
         )}
       </div>
+        
       <div>
         <div>
           <StyledModal
@@ -380,11 +352,7 @@ export const Login = () => {
                 onSubmit={onSubmitHandler}
               >
                 <center>
-                  <img
-                    className="app_header-image"
-                    src="./instaname.png"
-                    alt=""
-                  />
+                  <h2 className="insta__name">𝖎𝖓𝖘𝖙𝖆𝖌𝖗𝖆𝖒</h2>
                 </center>
                 {
                   <p style={{ color: "red", marginTop: "-0.2rem" }}>
@@ -518,11 +486,7 @@ export const Login = () => {
                   onSubmit={onSubmitSignInHandler}
                 >
                   <center>
-                    <img
-                      className="app_header-image"
-                      src="./instaname.png"
-                      alt=""
-                    />
+                    <h2 className="insta__name">𝖎𝖓𝖘𝖙𝖆𝖌𝖗𝖆𝖒</h2>
                   </center>
                   {
                     <p style={{ color: "red", marginTop: "-0.2rem" }}>
@@ -560,6 +524,7 @@ export const Login = () => {
               </Box>
             </StyledModal>
           </div>
+          
 
           {/* {userLoggedIN ? (
           <Button
@@ -581,6 +546,7 @@ export const Login = () => {
         )} */}
         </div>
       </div>
+      
     </div>
   );
 };
