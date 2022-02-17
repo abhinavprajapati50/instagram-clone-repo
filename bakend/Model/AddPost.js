@@ -1,5 +1,8 @@
 const Sequelize = require("sequelize");
+const { getPosts } = require("../Controller/addPost");
 const sequelize = require("../utils/database");
+const comment = require("./PostSub-model/comment");
+// const comment = require("./PostSub-model/comment");
 // const sequelizeDB = require("../../utils/database");
 
 // username
@@ -12,6 +15,7 @@ const addpost = sequelize.define("addpost", {
     autoIncrement: true,
     primaryKey: true,
   },
+  
   username: {
     type: Sequelize.STRING,
     allowNull: true,
@@ -24,14 +28,15 @@ const addpost = sequelize.define("addpost", {
     type: Sequelize.BLOB,
     allowNull: true,
   },
-  comment: {
-    type: Sequelize.INTEGER,
-    allowNull: true,
-  },
-  commId: {
+  user__Id: {
     type: Sequelize.INTEGER,
     allowNull: true,
   },
 });
+
+
+// User.hasOne(UserEmployee, {foreignKey: 'UserID', as: 'User'});
+// comment.belongsTo(addpost)
+// addpost.hasOne(comment )
 
 module.exports = addpost;

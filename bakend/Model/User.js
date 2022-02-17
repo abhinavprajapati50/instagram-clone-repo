@@ -3,11 +3,11 @@ const sequelize = require('../utils/database');
 // const sequelizeDB = require('../../utils/database')
 
 const User = sequelize.define('signUpUser', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-    },
+    // id: {
+    //     type: Sequelize.INTEGER,
+    //     autoIncrement: true,
+    //     primaryKey: true,
+    // },
     email: {
         type: Sequelize.STRING,
         allowNull: true
@@ -19,7 +19,7 @@ const User = sequelize.define('signUpUser', {
     username: {
         type: Sequelize.STRING,
         allowNull: true,
-    },
+    }
 })
 
 

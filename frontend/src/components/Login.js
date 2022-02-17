@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { styled, Box } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
-import { Avatar, Button, Modal, TextField } from "@mui/material";
+import { Avatar, Button, Grid, Modal, TextField } from "@mui/material";
 import "../App.css";
 import axios from "axios";
 import "./Login.css";
@@ -58,11 +58,10 @@ export const Login = () => {
 
   const [open, setOpen] = useState(false);
 
-
-
   const [name, setname] = useState("");
   const [caption, setcaption] = useState("");
   const [imageUrl, setimageUrl] = useState("");
+  const [user__Id, setuser__Id] = useState(localStorage.user)
   const [commetsId, setcommetsId] = useState();
 
   const [signInModleopen, setsignInModleopen] = useState(false);
@@ -80,14 +79,14 @@ export const Login = () => {
 
   const [Allcomments, setAllcommets] = useState([]);
 
-  const [uniqueComment, setuniqueComment] = useState("");
+  const [SiggnedData, setSiggnedData] = useState([]);
 
   const [userLoggedIN, setuserLoggedIN] = useState(
     localStorage.getItem("user") ? true : false
   );
 
   const [post, setpost] = useState([]);
-
+console.log("---------------=-SiggnedData",SiggnedData);
   const logoutHandler = () => {
     setuserLoggedIN(false);
     localStorage.removeItem("user");
@@ -157,13 +156,13 @@ export const Login = () => {
       formData.append("username", name);
       formData.append("caption", caption);
       formData.append("imageUrl", imageUrl);
-      formData.append("commets", commetsId);
+      // formData.append("commets", commetsId);
+      formData.append("user__Id", user__Id);
       const result = await axios.post(
         "http://localhost:5000/addpost",
         formData
       );
 
-     
       console.log("}}}}}}}}}}}}}}}}}}]", result.data);
 
       if (result.data.data) {
@@ -189,7 +188,6 @@ export const Login = () => {
   };
   const onSubmitSignInHandler = async (e) => {
     e.preventDefault();
-    debugger
     setemptyError(true);
     console.log("======================");
 
@@ -199,19 +197,21 @@ export const Login = () => {
         password: password,
       });
 
-      console.log("=======");
-      console.log(result.data);
+      // console.log("=======", JSON.stringify(result.data.data));
+      setSiggnedData(result.data.data)
+      // console.log(result.data);
       // setLoggedUser(result.data.data)
 
       if (result.data.data) {
         setuserLoggedIN(true);
         clearData();
         localStorage.setItem("user", result.data.data.id);
-        setLoggedUser(localStorage.setItem(result.data.data.id));
+        // setLoggedUser(localStorage.setItem(result.data.data.id));
         setsignInerrMsg(result.data.message);
         // CloseSignup()
         handlesetSignInModleopenClose();
         // return result;
+        // setSiggnedData(result.data.data)
       } else {
         setsignInerrMsg(result.data.message);
         // toast.warn(result.data.message);
@@ -221,7 +221,7 @@ export const Login = () => {
 
       console.log("---------result: ", result.data.data);
     } catch (error) {
-      console.log("error!!", error);
+      console.log("error!!", error || error.message);
     }
   };
 
@@ -236,41 +236,33 @@ export const Login = () => {
     setusername("");
   };
 
-  console.log("-------------LoggedUser", LoggedUser);
   useEffect(async () => {
     // signin
     const result = await axios.get("http://localhost:5000/allsignedUser", {
       email: email,
       password: password,
     });
-  
+
     const allPost = await axios.get("http://localhost:5000/addpost");
     const { data, status, message } = allPost.data;
-   
+
     setpost(data);
+    // setSiggnedData(result)
     console.log("allPost ==>> ", data);
 
-  ;
+    // const postComments = await Promise.all(
+    //   data.map((postId) => {
+    //     let commentData = axios.get(
+    //       `http://localhost:5000/get-comment?Post_id=${postId.id}`
+    //     );
+    //     return commentData;
+    //   })
+    // );
 
-    const postComments = await Promise.all(
-      data.map((postId) => {
-        let commentData = axios.get(
-          `http://localhost:5000/get-comment?Post_id=${postId.id}`
-        );
-        console.log("commentData ==>> ", commentData);
-        return commentData;
-      })
-    );
-
-    
-    const postID = postComments.map((postId) => {
-      console.log("postId ==>> ", postId.data.data);
-      return postId.data.data;
-     
-    });
-    setAllcommets(postID);
-
-  
+    // const postID = postComments.map((postId) => {
+    //   return postId.data.data;
+    // });
+    // setAllcommets(postID);
   }, [userLoggedIN]);
 
   // useEffect(() => {
@@ -303,39 +295,61 @@ export const Login = () => {
                 </Button>
               </div>
             </div>
+            {/* {console.log("(((((((((((((((((((((((((((((((((((((",.signUpUser)} */}
             <Post
               post={post}
               setpost={setpost}
               userLoggedIN={userLoggedIN}
+              SiggnedData={SiggnedData}
               commetsId={commetsId}
               setcommetsId={setcommetsId}
             />
           </>
         ) : (
-          <>
-            <div >
-              <Button
-                type="button"
-                className="Sign_up_Here"
-                onClick={handleOpen}
-              >
-                Sign-up
-              </Button>
-              <Button
-                type="button"
-                className="Sign_up_Here"
-                onClick={handlesetSignInModleopenOpen}
-              >
-                Sign-In
-              </Button>
-              </div>
+          <div>
+            <>
+              {/* <Box
+                sx={{
+                  
+                  backgroundColor: "primary.dark",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    opacity: [0.9, 0.8, 0.7],
+                    },
+                  
+                }}
+                > */}
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <div className="login">
+                      <Button
+                        type="button"
+                        className="Sign_up_Here"
+                        onClick={handleOpen}
+                      >
+                        Sign-up
+                      </Button>
+                      <Button
+                        type="button"
+                        className="Sign_up_Here"
+                        onClick={handlesetSignInModleopenOpen}
+                      >
+                        Sign-In
+                      </Button>
+                    </div>
+                  </Grid>
+                </Grid>
+              </Box>
+              {/* </Box> */}
               <div>
-              <img src="./insta.gif" alt="" style={{width: "100%", height: "100%",maxWidth: "100%"}} />
+                {/* <img src="./insta.gif" alt="" style={{width: "100%", height: "100%",maxWidth: "100%"}} /> */}
               </div>
-          </>
+            </>
+          </div>
         )}
       </div>
-        
+
       <div>
         <div>
           <StyledModal
@@ -392,6 +406,7 @@ export const Login = () => {
                   <TextField
                     id="outlined-basic"
                     label="Password"
+                    type="password"
                     variant="outlined"
                     value={password}
                     style={{ marginBottom: "1rem" }}
@@ -510,6 +525,7 @@ export const Login = () => {
                     <TextField
                       id="outlined-basic"
                       label="Password"
+                      type="password"
                       variant="outlined"
                       value={password}
                       style={{ marginBottom: "1rem" }}
@@ -524,7 +540,6 @@ export const Login = () => {
               </Box>
             </StyledModal>
           </div>
-          
 
           {/* {userLoggedIN ? (
           <Button
@@ -546,7 +561,6 @@ export const Login = () => {
         )} */}
         </div>
       </div>
-      
     </div>
   );
 };

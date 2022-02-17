@@ -9,6 +9,7 @@ const {
   allSignedUser,
 } = require("../Controller/userController");
 const upload = require("../imageuploader");
+const addpost = require("../Model/AddPost");
 
 const router = require("express").Router();
 
@@ -26,7 +27,8 @@ router.post("/addpost", upload.single("imageUrl"), addPost);
 router.get("/addpost", getPosts);
 
 // --comments
-router.post("/comments/", addComment);
+router.post("/comments", addComment);
 router.get("/get-comment", AllComments);
+
 
 module.exports = router;

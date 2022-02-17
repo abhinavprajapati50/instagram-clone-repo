@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../../utils/database");
+const addpost = require("../AddPost");
 // const sequelize = require("../../utils/database");
 // const sequelizeDB = require("../utils/database");
 
@@ -22,5 +23,8 @@ const comment = sequelize.define("comments", {
     allowNull: true,
   },
 });
+
+// comment.belongsTo(addpost);
+// User.hasOne(UserEmployee, {foreignKey: 'UserID', as: 'User'});
 
 module.exports = comment;

@@ -4,14 +4,25 @@ import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Avatar, Button, Modal, TextField } from "@mui/material";
 import "./Post.css";
 import axios from "axios";
+import { Comments } from "./Comments";
 // import "./Login.css";
-export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) => {
+export const Post = ({
+  post,
+  setpost,
+  userLoggedIN,
+  commetsId,
+  setcommetsId,
+  SiggnedData
+}) => {
   // const [commetsId, setcommetsId] = useState();
   const [Allcomments, setAllcommets] = useState([]);
   const [comments, setcommets] = useState("");
 
-  const onSubmitComments = async (id) => {
-    
+  const onSubmitComments = async (e, id) => {
+    e.preventDefault();
+    debugger;
+    console.log("----------------commetnt id===>>", e);
+    console.log("----------------commetnt id", id);
     // e.preventDefault();
     // setcommets(id)
 
@@ -19,7 +30,7 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
       // const allComments = await axios.post("http://localhost:5000/get-comment", {
       //   Post_id: id,
       // });
-      // console.log("get-commentget-commentget-comment", LoggedUser);
+      console.log("get-commentget-commentget-comment",comments,localStorage.user, id);
 
       const result = await axios.post("http://localhost:5000/comments", {
         comment: comments,
@@ -28,44 +39,56 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
       });
       setcommetsId(id);
 
+      // console.log("-------result cokmments",result);
+
       // console.log(result.data.data);
       // setpostDataComment(result.data.data.comment);
       setcommets("");
+      return result;
       // console.log("---------result: ", comments);
     } catch (error) {
       console.log("error!!", error.message);
     }
   };
 
+  const commentChangeHandler = (event) => {
+    // console.log( e.target.value);
+    // setcommets([{...comments, [e.target.name] : e.target.value}])
+    // setcommets({ ...comments, [e.target.name]: e.target.value });
+    // setcommets({ ...comments, [e.target.name]: e.target.value })
+
+    const { name, value } = event.target;
+    setcommets((prevState) => ({ ...prevState, [name]: value }));
+  };
 
   useEffect(async () => {
     const result = await axios.get("http://localhost:5000/allsignedUser");
     const allPost = await axios.get("http://localhost:5000/addpost");
     const { data, status, message } = allPost.data;
     setpost(data);
-    console.log("allPost ==>> ", data);
-    const postComments = await Promise.all(
-      data.map((postId) => {
-        let commentData = axios.get(
-          `http://localhost:5000/get-comment?Post_id=${postId.id}`
-        );
-        console.log("commentData ==>> ", commentData);
-        return commentData;
-      })
-    );
+    // const postComments = await Promise.all(
+    //   data.map((postId) => {
+    //     let commentData = axios.get(
+    //       `http://localhost:5000/get-comment?Post_id=${postId.id}`
+    //     );
+    //     return commentData;
+    //   })
+    // );
 
-    const postID = postComments.map((postId) => {
-      console.log("postId ==>> ", postId.data.data);
-      return postId.data.data;
-    });
-    setAllcommets(postID);
-  }, [userLoggedIN]);
+    // const postID = postComments.map((postId) => {
+    //   return postId.data.data;
+    // });
+    // setAllcommets(postID);
+  }, [userLoggedIN, comments]);
 
   return (
     <div>
       <div className="app__post">
         {post.map((curdata, i) => (
           <>
+            
+            {console.log("----curdata", curdata.signUpUser!==null && curdata.signUpUser.id )}
+            {/* {console.log(curdata)} */}
             {/* <Post
                     key={i}
                     id={curdata.id}
@@ -74,7 +97,7 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
                     imageUrl={`${curdata.imageUrl}`}
                     comment={curdata.comment}
                   /> */}
-            <div className="post" >
+            <div className="post">
               {/* header  --> avatar + username */}
               <div className="post__header">
                 <Avatar
@@ -96,7 +119,20 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
                 <strong>{curdata.username}</strong>
                 {curdata.caption}
               </h4>
-              {Allcomments[i] &&
+              <Comments post={curdata} SiggnedData={SiggnedData }/>
+              {/* {curdata.User_comments.length > 0 &&
+                curdata.User_comments.map((cur) => (
+                  <h4
+                    style={{
+                      border: "1px solid #a5a5a5",
+                      padding: "1rem",
+                    }}
+                  >
+                    {console.log("comments--", cur.comment)}
+                    comment: {cur.comment}
+                  </h4>
+                ))} */}
+              {/* {Allcomments[i] &&
                 Allcomments[i].length > 0 &&
                 Allcomments[i].map((cur) => {
                   return (
@@ -112,27 +148,28 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
                       </h4>
                     )
                   );
-                })}
+                })} */}
               {/* {setuniqueComment(curdata.id)} */}
               {/* <form action="" onSubmit={onSubmitComments(curdata.id)}> */}
               <div style={{ margin: "1rem" }}>
-                <TextField
-                  className="sign-up-input"
-                  id="outlined-basic"
-                  label="Comments..."
-                  variant="outlined"
-                  value={comments}
-                  
-                  onChange={(e) => setcommets(e.target.value)}
-                />
-                <Button
-                  type="button"
-                  onClick={() => onSubmitComments(curdata.id)}
-                >
-                  Posts
-                </Button>
+                {/* {console.log(curdata.id)  } */}
+                <form action="" onSubmit={(e) => onSubmitComments(e, curdata.id)}>
+                  {/* {console.log(e, curdata.id) } */}
+                  <TextField
+                    className="sign-up-input"
+                    id={curdata.id}
+                    label="Comments..."
+                    variant="outlined"
+                    value={comments}
+                    name={curdata.id}
+                    // onChange={commentChangeHandler}
+                    onChange={(e) => setcommets(e.target.value)}
+                  />
+                  <Button type="button" type="submit">
+                    Posts
+                  </Button>
+                </form>
               </div>
-
             </div>
           </>
         ))}
@@ -142,9 +179,14 @@ export const Post = ({ post,setpost, userLoggedIN, commetsId, setcommetsId }) =>
 };
 
 // =========================================================
-{/* </form> */}
-{/* <Comments /> */}
-{/* <div>
+{
+  /* </form> */
+}
+{
+  /* <Comments /> */
+}
+{
+  /* <div>
 <TextField
 className="sign-up-input"
 id="outlined-basic"
@@ -155,7 +197,8 @@ style={{ marginBottom: "1rem" }}
 onChange={(e) => setcommets(e.target.value)}
 />
 <Button onClick={onPostComment}>Post</Button>
-</div> */}
+</div> */
+}
 // =========================================================
 // =========================================================
 
@@ -166,28 +209,28 @@ onChange={(e) => setcommets(e.target.value)}
 // import { Comments } from "./Comments";
 
 // export const Post = ({ username, caption, imageUrl, id }) => {
-  
-  //   // const onPostComment = async (e) => {
-    //   //   e.preventDefault();
-    //   //   // setemptyError(true);
-    //   //   // console.log("SDFsdf");
-    
-    //   //   try {
-      //   //     const result = await axios.post(
-        //   //       "http://localhost:5000/comment",
-        //   //       comments
-        //   //     );
-        
-        //   //     console.log(result.data);
-        
-        //   //     // if (result.data.data) {
-          //   //     //   // setuserLoggedIN(true);
-          //   //     //   // clearData();
-          //   //     //   console.log();
-          //   //     //   // localStorage.setItem("user", 1);
-          //   //     //   // return result;
-          //   //     // } else {
-            //   //     //   // toast.warn(result.data.message);
+
+//   // const onPostComment = async (e) => {
+//   //   e.preventDefault();
+//   //   // setemptyError(true);
+//   //   // console.log("SDFsdf");
+
+//   //   try {
+//   //     const result = await axios.post(
+//   //       "http://localhost:5000/comment",
+//   //       comments
+//   //     );
+
+//   //     console.log(result.data);
+
+//   //     // if (result.data.data) {
+//   //     //   // setuserLoggedIN(true);
+//   //     //   // clearData();
+//   //     //   console.log();
+//   //     //   // localStorage.setItem("user", 1);
+//   //     //   // return result;
+//   //     // } else {
+//   //     //   // toast.warn(result.data.message);
 //   //     //   return;
 //   //     // }
 

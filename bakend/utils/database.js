@@ -6,6 +6,9 @@ const sequelize = new Sequelize('insta-clone', 'root', 'admin@123', {
     host: 'localhost',
 })
 
+
+
+
 module.exports = sequelize
 
 // const mysql = require('mysql2');
