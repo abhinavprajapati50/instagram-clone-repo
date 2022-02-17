@@ -71,6 +71,8 @@ exports.getPosts = async (req, res, next) => {
     const allpost = await addpost.findAll({
       // attributes: ["username", "caption", "imageUrl"], //use to attributes to get selected fields only.
       // include: comments,
+
+      
       order: [["createdAt", "DESC"]],
       include: [
         {
